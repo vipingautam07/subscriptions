@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-bg text-gray-900 antialiased transition-colors duration-200 dark:bg-dark-bg dark:text-dark-text min-h-screen relative;
+  }
+  
+  /* Adding a neobrutalist dot pattern background */
+  body::before {
+    content: "";
+    @apply absolute inset-0 opacity-20 pointer-events-none;
+    background-image: radial-gradient(#000 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .dark body::before {
+    background-image: radial-gradient(#fff 1px, transparent 1px);
+  }
+}
