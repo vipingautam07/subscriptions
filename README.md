@@ -1,124 +1,291 @@
+![Docker](https://img.shields.io/badge/Docker-Containerized-blue)
+![Docker Compose](https://img.shields.io/badge/Docker--Compose-Orchestration-blue)
+![Node](https://img.shields.io/badge/Node.js-Backend-green)
+![React](https://img.shields.io/badge/React-Frontend-blue)
+![MongoDB](https://img.shields.io/badge/MongoDB-Database-green)
+
 # Subscription Tracker
 
-A production-grade, full-stack SaaS application designed to help users relentlessly track, manage, and optimize their recurring subscriptions. Features a seamless neo-brutalist UI, advanced analytics, timezone-safe auto-renewals, and automated email reminders powered by background workflows.
+A **production-grade full-stack SaaS application** designed to help users track, manage, and optimize their recurring subscriptions.
+
+The platform provides a modern dashboard, advanced analytics, automated renewal tracking, and intelligent reminders to prevent unnecessary spending.
+
+Built with a **containerized architecture using Docker**, ensuring consistent environments across development and deployment.
 
 ---
 
-## Key Features
+# Highlights
 
-### Frontend (Client)
-- **Modern UI**: Beautiful, fully responsive design using **React** and **Tailwind CSS**.
-- **Dynamic Analytics Dashboard**: Visualizes your spending habits using **Recharts**. Includes 30-day forecasts, top expenses, and AI-driven "Smart Insights" summarizing unused/cancelled subscriptions.
-- **Robust State Management**: Built with **React Query** for caching, synchronised server state, and optimistic updates.
-- **Global Preferences**: User-configurable currencies (USD, EUR, GBP, INR) automatically reflect across all charts and metrics.
-- **Dark Mode Support**: Seamless toggle between Light and Dark themes.
-
-### Backend (Server)
-- **Node.js & Express**: Fast, scalable REST API architecture.
-- **MongoDB & Mongoose**: Flexible NoSQL database with strict schema validation and advanced lifecycle hooks.
-- **Smart Subscription Engine**: Automatically rolls active subscriptions forward based on their billing cycles (Daily, Weekly, Monthly, Yearly) using `dayjs` timezone-safe calculations.
-- **Automated Workflows**: Integrates with **Upstash QStash** to queue and dispatch timely email reminders to users before their subscriptions actually renew.
-- **Security First**: Protected with **Arcjet** for intelligent rate limiting and bot protection, plus **JWT** based HTTP-only authentication.
+* Production-ready **Dockerized architecture**
+* Modern **React + Tailwind UI**
+* **Subscription analytics dashboard**
+* **Automated renewal tracking**
+* **Email reminder workflows**
+* Secure **JWT authentication**
+* **Rate limiting and bot protection**
+* **Timezone-safe billing calculations**
 
 ---
 
-## Tech Stack
+# System Architecture
 
-**Client:**
-- React (Vite)
-- Tailwind CSS
-- React Query (TanStack)
-- Recharts (Data Visualization)
-- Lucide React (Icons)
-- React Router DOM
+The application runs using a **containerized microservice architecture**.
 
-**Server:**
-- Node.js & Express
-- MongoDB & Mongoose
-- JSON Web Tokens (JWT) & bcryptjs
-- Upstash Workflow (Background Jobs)
-- Arcjet (Security)
-- Nodemailer (Email Delivery)
-- Day.js (Date & Timezone Handling)
+### Components
+
+* **React Frontend** – User interface
+* **Node.js Backend** – REST API and business logic
+* **MongoDB** – Database for subscription data
+* **Nginx** – Reverse proxy serving the frontend
+* **Docker Compose** – Container orchestration
+
+### Architecture Flow
+
+User → Nginx (Docker) → React (Container) → Node API (Container) → MongoDB (Container)
 
 ---
 
-## Getting Started
+# Tech Stack
 
-### Prerequisites
-Make sure you have [Node.js](https://nodejs.org/) and [MongoDB](https://www.mongodb.com/) installed on your local machine.
+## Frontend
 
-### Installation
+* React (Vite)
+* Tailwind CSS
+* TanStack React Query
+* Recharts
+* Lucide React
+* React Router
 
-1. **Clone the repository:**
-   ```bash
-   git clone <your-repo-url>
-   cd subscription-tracker
-   ```
+## Backend
 
-2. **Install Server Dependencies:**
-   ```bash
-   cd server
-   npm install
-   ```
+* Node.js
+* Express.js
+* MongoDB
+* Mongoose
+* JWT Authentication
+* bcryptjs
+* Nodemailer
+* Day.js
 
-3. **Install Client Dependencies:**
-   ```bash
-   cd ../client
-   npm install
-   ```
+## Infrastructure
 
-### Environment Variables
+* Docker
+* Docker Compose
+* Nginx
+* Upstash QStash
+* Arcjet Security
 
-You will need to create `.env.development.local` / `.env` files in both the `client` and `server` directories.
+---
 
-**Server (`server/.env`):**
-```env
+# Project Structure
+
+```
+subscription-tracker
+│
+├── client
+│   ├── src
+│   ├── Dockerfile
+│   ├── nginx.conf
+│   └── vite.config.js
+│
+├── server
+│   ├── controllers
+│   ├── models
+│   ├── routes
+│   ├── middleware
+│   ├── Dockerfile
+│   └── server.js
+│
+├── docker-compose.yml
+├── README.md
+```
+
+---
+
+# Docker Setup (Recommended)
+
+The entire application can be started using Docker.
+
+## Prerequisites
+
+Install:
+
+* Docker
+* Docker Compose
+
+## Run the Application
+
+```
+docker-compose up --build
+```
+
+This will start:
+
+* React frontend (served through Nginx)
+* Node.js backend
+* MongoDB database
+
+Once the containers are running open:
+
+```
+http://localhost
+```
+
+---
+
+# Running Without Docker (Development Mode)
+
+You can also run the application locally without containers.
+
+## Prerequisites
+
+Install:
+
+* Node.js
+* MongoDB
+
+---
+
+## Clone the Repository
+
+```
+git clone <your-repo-url>
+cd subscription-tracker
+```
+
+---
+
+## Install Backend Dependencies
+
+```
+cd server
+npm install
+```
+
+---
+
+## Install Frontend Dependencies
+
+```
+cd ../client
+npm install
+```
+
+---
+
+# Environment Variables
+
+Create `.env` files in both **server** and **client** directories.
+
+## Server (.env)
+
+```
 PORT=5000
 MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
 JWT_EXPIRES_IN=1d
+
 ARCJET_KEY=your_arcjet_key
 ARCJET_ENV=development
+
 QSTASH_TOKEN=your_upstash_qstash_token
 QSTASH_URL=your_upstash_qstash_url
+
 EMAIL_PASSWORD=your_email_password
 ```
 
-**Client (`client/.env.local`):**
-```env
+---
+
+## Client (.env.local)
+
+```
 VITE_API_URL=http://localhost:5000/api/v1
 ```
 
-### Running the Application
+---
 
-Open two terminal windows/tabs.
+# Start Development Servers
 
-**1. Start the Backend Server:**
-```bash
+Backend:
+
+```
 cd server
 npm run dev
 ```
 
-**2. Start the Frontend Client:**
-```bash
+Frontend:
+
+```
 cd client
 npm run dev
 ```
 
-The app should now be running! Open your browser and navigate to `http://localhost:5173`.
+Open:
+
+```
+http://localhost:5173
+```
 
 ---
 
-## Core Architecture & Lifecycle
-Instead of rigidly marking subscriptions as "expired" when their billing date passes, this platform implements a realistic SaaS lifecycle. 
+# Core Subscription Lifecycle
 
-- **Active**: Renewing normally. The backend automatically advances the `renewalDate` forward by the billing frequency.
-- **Cancelled**: The user has stopped the auto-renew. The subscription remains active until the final billing date, after which it permanently degrades to **Ended**.
-- **Paused**: Temporarily halted. Billing cycle dates freeze.
-- **Ended (Inactive)**: The lifecycle is complete. The application tracks this as "savings" in the dashboard insights.
+Instead of rigidly marking subscriptions as expired when their billing date passes, the platform models a **real SaaS lifecycle**.
+
+### Active
+
+Subscription automatically renews according to billing frequency.
+
+### Cancelled
+
+Auto-renew is disabled but remains active until the final billing date.
+
+### Paused
+
+Billing cycle temporarily halted.
+
+### Ended
+
+Subscription lifecycle completed and counted as savings.
 
 ---
 
-## License
-This project is licensed under the MIT License.
+# Security Features
+
+* JWT authentication with HTTP-only cookies
+* Rate limiting and bot protection using Arcjet
+* Password hashing with bcrypt
+* Environment variable based configuration
+
+---
+
+# Analytics Dashboard
+
+The dashboard provides:
+
+* Monthly subscription cost breakdown
+* Forecast of upcoming expenses
+* Smart insights detecting unused subscriptions
+* Currency preference support (USD, EUR, GBP, INR)
+
+---
+
+# Background Workflows
+
+Using **Upstash QStash**, the system automatically:
+
+* Schedules subscription reminders
+* Sends renewal alerts
+* Prevents users from missing billing dates
+
+---
+
+# License
+
+This project is licensed under the **MIT License**.
+
+---
+
+# Author
+
+Vipin Gautam
