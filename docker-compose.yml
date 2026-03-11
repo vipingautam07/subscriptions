@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: subscription-tracker-server
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./server/.env
+    restart: unless-stopped
+    networks:
+      - sub-network
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        # Pass the API URL to Vite at build-time. We route to localhost:5000 because
+        # the client's browser makes the request to the server, not the nginx container itself.
+        - VITE_API_URL=http://localhost:5000/api/v1
+    container_name: subscription-tracker-client
+    ports:
+      - "80:80"
+      - "5173:80" # Mapping 5173 to 80 so localhost:5173 works interchangeably
+    depends_on:
+      - server
+    restart: unless-stopped
+    networks:
+      - sub-network
+
+networks:
+  sub-network:
+    driver: bridge
